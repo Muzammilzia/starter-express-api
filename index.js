@@ -1,7 +1,58 @@
 const express = require("express");
+const bodyParser = require("body-parser");
+const nodemailer = require("nodemailer");
+
 const app = express();
-app.all("/", (req, res) => {
+const port = 3000; // Replace with your desired port
+
+// Middleware to parse JSON in the request body
+app.use(bodyParser.json());
+
+// POST endpoint to receive data and send an email
+app.post("/send-email", (req, res) => {
+  try {
+    // Stringify the request body
+    const requestBodyString = JSON.stringify(req.body, null, 2);
+
+    // Configure Nodemailer with your email credentials
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "your-email@gmail.com",
+        pass: "your-email-password",
+      },
+    });
+
+    // Define the email options
+    const mailOptions = {
+      from: "your-email@gmail.com",
+      to: "recipient-email@example.com",
+      subject: "Data from Express API",
+      text: `Received data:\n${requestBodyString}`,
+    };
+
+    // Send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending email:", error);
+        res.status(500).send("Internal Server Error");
+      } else {
+        console.log("Email sent:", info.response);
+        res.status(200).send("Email sent successfully");
+      }
+    });
+  } catch (error) {
+    console.error("Error processing request:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/", (req, res) => {
   console.log("Just got a request!");
   res.send("helloo!");
 });
-app.listen(process.env.PORT || 3000);
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
