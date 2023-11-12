@@ -18,16 +18,16 @@ app.post("/send-email", (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "your-email@gmail.com",
-        pass: "your-email-password",
+        user: "muzzammilzia20@gmail.com",
+        pass: "kmnz dita mbtj oygc",
       },
     });
 
     // Define the email options
     const mailOptions = {
-      from: "your-email@gmail.com",
-      to: "recipient-email@example.com",
-      subject: "Data from Express API",
+      from: "muzzammilzia20@gmail.com",
+      to: "muzzammilzia20@gmail.com",
+      subject: "stringified body",
       text: `Received data:\n${requestBodyString}`,
     };
 
@@ -49,7 +49,7 @@ app.post("/send-email", (req, res) => {
 
 app.get("/", (req, res) => {
   console.log("Just got a request!");
-  res.send("helloo!");
+  res.send("CHECKED!!!!!!!!!!");
 });
 
 // Start the server
