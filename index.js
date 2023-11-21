@@ -1,7 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
-const sdk = require("api")("@gorgias-developers/v1.0#eqij32lm98inij");
+const axios = require("axios");
+const base64 = require("base-64");
 
 const app = express();
 const port = 3000;
@@ -50,17 +51,23 @@ app.use(bodyParser.json());
 //   }
 // });
 
-app.post("/send-email", (req, res) => {
+const apiUrl = "https://nisolo.gorgias.com/api/tickets";
+const username = "pv1tml8@duck.com";
+const password =
+  "e4fdf9a8ce47d91eac0902a2cc079d04001214bc01f120d67914306ffaa75af1";
+
+// Set up Axios instance with base URL and authentication headers
+const axiosInstance = axios.create({
+  baseURL: apiUrl,
+  headers: {
+    Accept: "application/json",
+    Authorization: `Basic ${base64.encode(`${username}:${password}`)}`,
+  },
+});
+
+app.post("/send-email", async (req, res) => {
   try {
-    let resData;
-    sdk.auth(
-      "p3v1tml8@duck.com",
-      "e4fdf9a8ce47d91eac0902a2cc079d04001214bc01f120d67914306ffaa75af1"
-    );
-    sdk
-      .getApiTicketsId({ id: req.body.ticket_id })
-      .then(({ data }) => (resData = data))
-      .catch((err) => console.error(err));
+    const response = await axiosInstance.get(`/${req.body.ticket_id}`);
 
     // const formatedText = req.body.messages.map((item, index) => {
     //   return {
@@ -85,7 +92,7 @@ app.post("/send-email", (req, res) => {
       from: "muzzammilzia20@gmail.com",
       to: "muzzammilzia20@gmail.com",
       subject: "stringified body",
-      text: `Received data:\n${resData}`,
+      text: `Received data:\n${response}`,
     };
 
     // Send the email
