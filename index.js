@@ -9,10 +9,56 @@ const port = 3000; // Replace with your desired port
 app.use(bodyParser.json());
 
 // POST endpoint to receive data and send an email
+// app.post("/send-email", (req, res) => {
+//   try {
+//     // Stringify the request body
+//     // const requestBodyString = JSON.stringify(req.body, null, 2);
+
+//     // Configure Nodemailer with your email credentials
+//     const transporter = nodemailer.createTransport({
+//       service: "gmail",
+//       auth: {
+//         user: "muzzammilzia20@gmail.com",
+//         pass: "kmnz dita mbtj oygc",
+//       },
+//     });
+
+//     // Define the email options
+//     const mailOptions = {
+//       from: "muzzammilzia20@gmail.com",
+//       to: "muzzammilzia20@gmail.com",
+//       subject: "stringified body",
+//       text: `Received data:\n${req.body}`,
+//     };
+
+//     // Send the email
+//     transporter.sendMail(mailOptions, (error, info) => {
+//       if (error) {
+//         console.error("Error sending email:", error);
+//         res.status(500).send("Internal Server Error");
+//       } else {
+//         console.log("Email sent:", info.response);
+//         res.status(200).json({
+//           message: `Email processed successfully ${req.body.ticket_id}`,
+//         });
+//       }
+//     });
+//   } catch (error) {
+//     console.error("Error processing request:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
+
 app.post("/send-email", (req, res) => {
   try {
+    const formatedText = req.body.messages.map((item, index) => {
+      return {
+        role: item.from_agent ? "agent" : "customer",
+        content: item.body_text,
+      };
+    });
     // Stringify the request body
-    const requestBodyString = JSON.stringify(req.body, null, 2);
+    // const requestBodyString = JSON.stringify(req.body, null, 2);
 
     // Configure Nodemailer with your email credentials
     const transporter = nodemailer.createTransport({
@@ -28,7 +74,7 @@ app.post("/send-email", (req, res) => {
       from: "muzzammilzia20@gmail.com",
       to: "muzzammilzia20@gmail.com",
       subject: "stringified body",
-      text: `Received data:\n${requestBodyString}`,
+      text: `Received data:\n${formatedText}`,
     };
 
     // Send the email
@@ -38,11 +84,9 @@ app.post("/send-email", (req, res) => {
         res.status(500).send("Internal Server Error");
       } else {
         console.log("Email sent:", info.response);
-        res
-          .status(200)
-          .json({
-            message: `Email processed successfully ${req.body.ticket_id}`,
-          });
+        res.status(200).json({
+          message: `Email processed successfully ${req.body.ticket_id}`,
+        });
       }
     });
   } catch (error) {
