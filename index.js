@@ -27,7 +27,7 @@ app.post("/send-email", async (req, res) => {
     const formattedText = response.data.messages.map((item, index) => {
       return {
         role: item.from_agent ? "agent" : "customer",
-        content: item.body_text,
+        content: item.stripped_text,
       };
     });
 
@@ -36,7 +36,7 @@ app.post("/send-email", async (req, res) => {
       url: "https://dev.hiabstract.com/suggested-response",
       data: {
         ticket_id: req.body.ticket_id,
-        customer_id: req.body.customer?.id,
+        customer_id: response.data.customer.id,
         brand: "brand",
         messages: formattedText,
       },
