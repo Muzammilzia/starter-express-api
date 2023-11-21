@@ -47,7 +47,7 @@ app.post("/send-email", async (req, res) => {
       from: "muzzammilzia20@gmail.com",
       to: "muzzammilzia20@gmail.com",
       subject: "stringified body",
-      text: `Received data:\n${response.data}`,
+      text: `Received data:\n${JSON.stringify(response.data, null, 2)}`,
     };
 
     // Send the email
