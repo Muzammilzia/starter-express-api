@@ -37,7 +37,7 @@ app.post("/send-email", async (req, res) => {
       data: {
         ticket_id: req.body.ticket_id,
         customer_id: response.data.customer.id,
-        brand: "brand",
+        brand: "nisolo",
         messages: formattedText,
       },
     });
