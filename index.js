@@ -38,7 +38,7 @@ app.post("/send-email", (req, res) => {
         res.status(500).send("Internal Server Error");
       } else {
         console.log("Email sent:", info.response);
-        res.status(200).send("Email sent successfully");
+        res.status(200).json({ message: "Email sent successfully" });
       }
     });
   } catch (error) {
