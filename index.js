@@ -17,15 +17,14 @@ const password =
 
 app.post("/send-email", async (req, res) => {
   try {
-    const response = await axios.get(
-      `https://nisolo.gorgias.com/api/tickets/${req.body.ticket_id}`,
-      {
-        auth: {
-          username: username,
-          password: password,
-        },
-      }
-    );
+    const response = await axios({
+      method: "get",
+      url: `https://nisolo.gorgias.com/api/tickets/${req.body.ticket_id}`,
+      auth: {
+        username: username,
+        password: password,
+      },
+    });
 
     // const formatedText = req.body.messages.map((item, index) => {
     //   return {
@@ -65,7 +64,7 @@ app.post("/send-email", async (req, res) => {
     });
   } catch (error) {
     console.error("Error processing request:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).send("Internal Server Error", error);
   }
 });
 
