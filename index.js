@@ -36,7 +36,7 @@ app.post("/send-email", async (req, res) => {
       url: "https://dev.hiabstract.com/suggested-response",
       data: {
         ticket_id: req.body.ticket_id,
-        customer_id: req.body.customer.id,
+        customer_id: req.body.customer?.id,
         brand: "brand",
         messages: formattedText,
       },
