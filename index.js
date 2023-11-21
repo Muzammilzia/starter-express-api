@@ -61,7 +61,6 @@ const axiosInstance = axios.create({
   baseURL: apiUrl,
   headers: {
     Accept: "application/json",
-    Authorization: `Basic ${base64.encode(`${username}:${password}`)}`,
   },
 });
 
