@@ -65,6 +65,14 @@ const axiosInstance = axios.create({
   },
 });
 
+// Middleware for adding authentication headers to each request
+axiosInstance.interceptors.request.use((config) => {
+  config.headers.Authorization = `Basic ${base64.encode(
+    `${username}:${password}`
+  )}`;
+  return config;
+});
+
 app.post("/send-email", async (req, res) => {
   try {
     const response = await axiosInstance.get(`/${req.body.ticket_id}`);
