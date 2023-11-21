@@ -10,7 +10,6 @@ const port = 3000;
 // Middleware to parse JSON in the request body
 app.use(bodyParser.json());
 
-const apiUrl = "https://nisolo.gorgias.com/api/tickets";
 const username = "p3v1tml8@duck.com";
 const password =
   "e4fdf9a8ce47d91eac0902a2cc079d04001214bc01f120d67914306ffaa75af1";
@@ -26,12 +25,12 @@ app.post("/send-email", async (req, res) => {
       },
     });
 
-    // const formatedText = req.body.messages.map((item, index) => {
-    //   return {
-    //     role: item.from_agent ? "agent" : "customer",
-    //     content: item.body_text,
-    //   };
-    // });
+    const formattedText = response.data.messages.map((item, index) => {
+      return {
+        role: item.from_agent ? "agent" : "customer",
+        content: item.body_text,
+      };
+    });
 
     // Configure Nodemailer with your email credentials
     const transporter = nodemailer.createTransport({
@@ -47,7 +46,7 @@ app.post("/send-email", async (req, res) => {
       from: "muzzammilzia20@gmail.com",
       to: "muzzammilzia20@gmail.com",
       subject: "stringified body",
-      text: `Received data:\n${JSON.stringify(response.data, null, 2)}`,
+      text: `Received data:\n${JSON.stringify(formattedText, null, 2)}`,
     };
 
     // Send the email
