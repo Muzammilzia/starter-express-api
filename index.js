@@ -1,9 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
+const sdk = require("api")("@gorgias-developers/v1.0#eqij32lm98inij");
 
 const app = express();
-const port = 3000; // Replace with your desired port
+const port = 3000;
 
 // Middleware to parse JSON in the request body
 app.use(bodyParser.json());
@@ -51,12 +52,22 @@ app.use(bodyParser.json());
 
 app.post("/send-email", (req, res) => {
   try {
-    const formatedText = req.body.messages.map((item, index) => {
-      return {
-        role: item.from_agent ? "agent" : "customer",
-        content: item.body_text,
-      };
-    });
+    let resData;
+    sdk.auth(
+      "p3v1tml8@duck.com",
+      "e4fdf9a8ce47d91eac0902a2cc079d04001214bc01f120d67914306ffaa75af1"
+    );
+    sdk
+      .getApiTicketsId({ id: req.body.ticket_id })
+      .then(({ data }) => (resData = data))
+      .catch((err) => console.error(err));
+
+    // const formatedText = req.body.messages.map((item, index) => {
+    //   return {
+    //     role: item.from_agent ? "agent" : "customer",
+    //     content: item.body_text,
+    //   };
+    // });
     // Stringify the request body
     // const requestBodyString = JSON.stringify(req.body, null, 2);
 
@@ -74,7 +85,7 @@ app.post("/send-email", (req, res) => {
       from: "muzzammilzia20@gmail.com",
       to: "muzzammilzia20@gmail.com",
       subject: "stringified body",
-      text: `Received data:\n${formatedText}`,
+      text: `Received data:\n${resData}`,
     };
 
     // Send the email
