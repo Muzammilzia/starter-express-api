@@ -2,7 +2,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const axios = require("axios");
-const base64 = require("base-64");
 
 const app = express();
 const port = 3000;
@@ -32,6 +31,17 @@ app.post("/send-email", async (req, res) => {
       };
     });
 
+    const suggestedReplyResponse = await axios({
+      method: "post",
+      url: "https://dev.hiabstract.com/suggested-response",
+      data: {
+        ticket_id: req.body.ticket_id,
+        customer_id: req.body.customer.id,
+        brand: "brand",
+        messages: formattedText,
+      },
+    });
+
     // Configure Nodemailer with your email credentials
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -46,7 +56,11 @@ app.post("/send-email", async (req, res) => {
       from: "muzzammilzia20@gmail.com",
       to: "muzzammilzia20@gmail.com",
       subject: "stringified body",
-      text: `Received data:\n${JSON.stringify(formattedText, null, 2)}`,
+      text: `Received data:\n${JSON.stringify(
+        suggestedReplyResponse,
+        null,
+        2
+      )}`,
     };
 
     // Send the email
